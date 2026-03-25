@@ -1,19 +1,23 @@
 import { test as base } from '@playwright/test';
 import { RequestHandler } from './request-handler';
 import { APILogger } from './logger';
-import { setCustomExpectLogger, expect } from './custom-expect';
+import { setCustomExpectLogger } from './custom-expect';
+import { config } from '../config';
 
-export { expect }
+
 export type TestOptions = {
     api: RequestHandler
+    config: typeof config
 }
 
 export const test = base.extend<TestOptions>({
     api: async ({ request }, use) => {
-        const baseURL = 'https://conduit-api.bondaracademy.com/api'
         const logger = new APILogger;
         setCustomExpectLogger(logger);
-        const requestHandler = new RequestHandler(request, baseURL, logger)
+        const requestHandler = new RequestHandler(request, config.baseURL, logger)
         await use(requestHandler)
+    },
+    config: async ({ }, use) => {
+        await use(config)
     }
 })

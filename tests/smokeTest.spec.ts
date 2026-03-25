@@ -3,17 +3,18 @@ import { expect } from '../utils/custom-expect';
 
 let authToken: string;
 
-test.beforeAll('run before all', async ({ api }) => {
+test.beforeAll('run before all', async ({ api, config }) => {
     const tokenResponse = await api
         .path('/users/login')
         .body({
             "user": {
-                "email": "luckymeeku@gmail.com",
-                "password": "lucky2709"
+                "email": config.userEmail,
+                "password": config.userPassword
             }
         })
         .postRequest(200)
     authToken = 'Token ' + tokenResponse.user.token;
+    console.log(tokenResponse.user)
 })
 
 // default url passed in fixture
@@ -29,8 +30,6 @@ test('first test', async ({ api }) => {
                 "password": "lucky2709"
             }
         })
-
-
 
 })
 
