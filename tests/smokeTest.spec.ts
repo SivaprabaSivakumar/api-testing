@@ -1,20 +1,31 @@
 import { test } from '../utils/fixtures';
 import { expect } from '../utils/custom-expect';
+import { createToken } from '../helpers/createToken';
 
 let authToken: string;
 
 test.beforeAll('run before all', async ({ api, config }) => {
-    const tokenResponse = await api
-        .path('/users/login')
-        .body({
-            "user": {
-                "email": config.userEmail,
-                "password": config.userPassword
-            }
-        })
-        .postRequest(200)
-    authToken = 'Token ' + tokenResponse.user.token;
-    console.log(tokenResponse.user)
+    //commented this because using helper function to create token
+    // const tokenResponse = await api
+    //     .path('/users/login')
+    //     .body({
+    //         "user": {
+    //             "email": config.userEmail,
+    //             "password": config.userPassword
+    //         }
+    //     })
+    //     .postRequest(200)
+    //authToken = 'Token ' + tokenResponse.user.token;
+    //used this validate env passed or not
+    //console.log(tokenResponse.user)
+
+    //simple way to pass the 1st function from helper
+    //authToken = await createToken(api, config.userEmail, config.userPassword);
+
+    // 2nd function from helper
+    authToken = await createToken(config.userEmail, config.userPassword);
+
+
 })
 
 // default url passed in fixture
@@ -48,6 +59,13 @@ test('Get articles', async ({ api }) => {
         .getRequest(200)
     expect(response.articles.length).shouldBeLessThanOrEqual(10);
     expect(response.articlesCount).shouldEqual(10);
+
+
+    const response2 = await api
+        .path('/tags')
+        .getRequest(200)
+    expect(response2.tags[0]).shouldEqual('Test');
+    expect(response2.tags.length).shouldBeLessThanOrEqual(10);
 })
 
 test('Get test tags', async ({ api }) => {
@@ -107,7 +125,7 @@ test('Get token by login, create, update and delete article', async ({ api }) =>
         .headers({ Authorization: authToken })
         .postRequest(201)
 
-    expect(createArticleResponse.article.title).shouldEqual('yayyy')
+    expect(createArticleResponse.article.title).shouldEqual('yayyy22')
     const uniqId = createArticleResponse.article.slug;
 
     const updateArticleResponse = await api

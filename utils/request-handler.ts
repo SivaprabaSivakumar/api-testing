@@ -53,6 +53,7 @@ export class RequestHandler {
         const response = await this.request.get(url, {
             headers: this.apiHeaders
         })
+        this.cleanUpFields();
         const actualStatus = response.status()
         const responseJSON = await response.json();
 
@@ -68,6 +69,7 @@ export class RequestHandler {
             headers: this.apiHeaders,
             data: this.apiBody
         })
+        this.cleanUpFields();
         const actualStatus = response.status()
         const responseJSON = await response.json();
 
@@ -84,6 +86,7 @@ export class RequestHandler {
             headers: this.apiHeaders,
             data: this.apiBody
         })
+        this.cleanUpFields();
         const actualStatus = response.status()
         const responseJSON = await response.json();
 
@@ -98,6 +101,7 @@ export class RequestHandler {
         const response = await this.request.delete(url, {
             headers: this.apiHeaders
         })
+        this.cleanUpFields();
         const actualStatus = response.status()
 
         this.logger.logResponse(actualStatus)
@@ -118,5 +122,14 @@ export class RequestHandler {
             Error.captureStackTrace(error, callingMethod)
             throw error;
         }
+    }
+
+    private cleanUpFields() {
+        this.apiBody = {};
+        this.apiHeaders = {};
+        this.baseUrl = undefined;
+        this.apiPath = '';
+        this.queryParam = {};
+
     }
 }
