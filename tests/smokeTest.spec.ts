@@ -1,5 +1,5 @@
-import { expect } from '@playwright/test';
 import { test } from '../utils/fixtures';
+import { expect } from '../utils/custom-expect';
 
 let authToken: string;
 
@@ -46,17 +46,17 @@ test('Get articles', async ({ api }) => {
     const response = await api
         .path('/articles')
         .param({ limit: 10, offset: 0 })
-        .getRequest(201)
-    expect(response.articles.length).toBeLessThanOrEqual(10);
-    expect(response.articlesCount).toEqual(10);
+        .getRequest(200)
+    expect(response.articles.length).shouldBeLessThanOrEqual(10);
+    expect(response.articlesCount).shouldEqual(10);
 })
 
 test('Get test tags', async ({ api }) => {
     const response = await api
         .path('/tags')
         .getRequest(200)
-    expect(response.tags[0]).toEqual('Test');
-    expect(response.tags.length).toBeLessThanOrEqual(10);
+    expect(response.tags[0]).shouldEqual('Test');
+    expect(response.tags.length).shouldBeLessThanOrEqual(10);
 })
 test('Get token by login, create and delete article', async ({ api }) => {
     const createArticleResponse = await api
@@ -69,7 +69,7 @@ test('Get token by login, create and delete article', async ({ api }) => {
         .headers({ Authorization: authToken })
         .postRequest(201)
 
-    expect(createArticleResponse.article.title).toEqual('yayyy')
+    expect(createArticleResponse.article.title).shouldEqual('yayyy')
     const uniqId = createArticleResponse.article.slug;
 
     const getArticle = await api
@@ -78,7 +78,7 @@ test('Get token by login, create and delete article', async ({ api }) => {
         .param({ limit: 10, offset: 0 })
         .getRequest(200)
 
-    expect(getArticle.articles[0].title).toEqual('yayyy')
+    expect(getArticle.articles[0].title).shouldEqual('yayyy')
 
     await api
         .path(`/articles/${uniqId}`)
@@ -91,7 +91,7 @@ test('Get token by login, create and delete article', async ({ api }) => {
         .param({ limit: 10, offset: 0 })
         .getRequest(200)
 
-    expect(getArticleTwo.articles[0].title).not.toEqual('yayyy')
+    expect(getArticleTwo.articles[0].title).not.shouldEqual('yayyy')
 
 
 })
@@ -108,7 +108,7 @@ test('Get token by login, create, update and delete article', async ({ api }) =>
         .headers({ Authorization: authToken })
         .postRequest(201)
 
-    expect(createArticleResponse.article.title).toEqual('yayyy')
+    expect(createArticleResponse.article.title).shouldEqual('yayyy')
     const uniqId = createArticleResponse.article.slug;
 
     const updateArticleResponse = await api
@@ -121,7 +121,7 @@ test('Get token by login, create, update and delete article', async ({ api }) =>
         })
         .putRequest(200)
 
-    expect(updateArticleResponse.article.title).toEqual('Praba yayyyy')
+    expect(updateArticleResponse.article.title).shouldEqual('Praba yayyyy')
     const uniqId2 = updateArticleResponse.article.slug;
 
     const getArticle = await api
@@ -130,7 +130,7 @@ test('Get token by login, create, update and delete article', async ({ api }) =>
         .param({ limit: 10, offset: 0 })
         .getRequest(200)
 
-    expect(getArticle.articles[0].title).toEqual('Praba yayyyy')
+    expect(getArticle.articles[0].title).shouldEqual('Praba yayyyy')
 
 
     await api
@@ -144,7 +144,7 @@ test('Get token by login, create, update and delete article', async ({ api }) =>
         .param({ limit: 10, offset: 0 })
         .getRequest(200)
 
-    expect(getArticleTwo.articles[0].title).not.toEqual('Praba yayyyy')
+    expect(getArticleTwo.articles[0].title).not.shouldEqual('Praba yayyyy')
 
 
 })
