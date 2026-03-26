@@ -43,6 +43,9 @@ export default defineConfig({
     {
       name: 'smoke-test',
       testMatch: 'smoke*'
+    },
+    {
+      name: 'all-test',
     }
   ]
 });
