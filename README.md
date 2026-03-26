@@ -26,8 +26,13 @@ To run tests in prod environment
 To run tests in dev environment
 `ENV=dev npx playwright test smokeTest.spec.ts`
 
+To run project wise tests
+`npx playwright test --project smoke-test`
+
 # Report Generation
 `npx playwright show-report`
 
 # Reference
 - Custom assertions : [documentation](https://playwright.dev/docs/test-assertions#add-custom-matchers-using-expectextend)
+
+- Report : [documentation](https://playwright.dev/docs/test-reporters)
