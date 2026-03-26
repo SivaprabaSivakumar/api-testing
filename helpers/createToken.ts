@@ -33,7 +33,7 @@ export async function createToken(email: string, password: string) {
             .postRequest(200)
         return 'Token ' + tokenResponse.user.token;
     } catch (error) {
-        Error.captureStackTrace(error, createToken);
+        Error.captureStackTrace(error as Error, createToken);
         throw error;
     } finally {
         await context.dispose();
