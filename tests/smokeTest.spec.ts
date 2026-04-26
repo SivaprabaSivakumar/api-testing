@@ -1,6 +1,7 @@
 import { test } from '../utils/fixtures';
 import { expect } from '../utils/custom-expect';
 import { createToken } from '../helpers/createToken';
+import { validateSchema } from '../utils/schema-validator';
 
 // let authToken: string;
 
@@ -55,6 +56,7 @@ test('Get articles', async ({ api }) => {
         .path('/articles')
         .param({ limit: 10, offset: 0 })
         .getRequest(200)
+    await expect(response).shouldMatchSchema('articles', 'GET_articles')
     expect(response.articles.length).shouldBeLessThanOrEqual(10);
     expect(response.articlesCount).shouldEqual(10);
 })
@@ -63,9 +65,11 @@ test('Get test tags', async ({ api }) => {
     const response = await api
         .path('/tags')
         .getRequest(200)
+    await expect(response).shouldMatchSchema('tags', 'GET_tags', true) // true to create new schema
     expect(response.tags[0]).shouldEqual('Test');
     expect(response.tags.length).shouldBeLessThanOrEqual(10);
 })
+
 test('Create, get and delete article', async ({ api }) => {
     const createArticleResponse = await api
         .path('/articles')
@@ -75,7 +79,7 @@ test('Create, get and delete article', async ({ api }) => {
             }
         })
         .postRequest(201)
-
+    await expect(createArticleResponse).shouldMatchSchema('articles', 'POST_articles')
     expect(createArticleResponse.article.title).shouldEqual('yayyy')
     const uniqId = createArticleResponse.article.slug;
 
