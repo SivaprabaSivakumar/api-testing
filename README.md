@@ -36,3 +36,9 @@ To run project wise tests
 - Custom assertions : [documentation](https://playwright.dev/docs/test-assertions#add-custom-matchers-using-expectextend)
 
 - Report : [documentation](https://playwright.dev/docs/test-reporters)
+
+
+# Schema Validator
+npm install ajv --save-dev
+npm i genson-js --save-dev
+npm i ajv-formats ---save-dev
