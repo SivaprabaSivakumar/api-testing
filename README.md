@@ -42,3 +42,9 @@ To run project wise tests
 npm install ajv --save-dev
 npm i genson-js --save-dev
 npm i ajv-formats ---save-dev
+
+# Faker - To generate test data
+npm install --save-dev @faker-js/faker
+
+# Dotevn - To load environment variables
+npm install dotenv --save

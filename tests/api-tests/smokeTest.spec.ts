@@ -1,7 +1,9 @@
-import { test } from '../utils/fixtures';
-import { expect } from '../utils/custom-expect';
-import { createToken } from '../helpers/createToken';
-import { validateSchema } from '../utils/schema-validator';
+import { test } from '../../utils/fixtures';
+import { expect } from '../../utils/custom-expect';
+import articleRequestPayload from '../../request-objects/POST-article.json';
+import { ar, faker } from '@faker-js/faker';
+import { getRandomArticle } from '../../utils/data-generator';
+import { wait } from 'wait-utils';
 
 // let authToken: string;
 
@@ -65,22 +67,19 @@ test('Get test tags', async ({ api }) => {
     const response = await api
         .path('/tags')
         .getRequest(200)
-    await expect(response).shouldMatchSchema('tags', 'GET_tags', true) // true to create new schema
+    await expect(response).shouldMatchSchema('tags', 'GET_tags')//, true) // true to create new schema, remove it after schema is created
     expect(response.tags[0]).shouldEqual('Test');
     expect(response.tags.length).shouldBeLessThanOrEqual(10);
 })
 
 test('Create, get and delete article', async ({ api }) => {
+    const articleRequest = getRandomArticle()
     const createArticleResponse = await api
         .path('/articles')
-        .body({
-            "article": {
-                "title": "yayyy", "description": "yayyy description 2", "body": "yayyy body 2", "tagList": ["yayyyy"]
-            }
-        })
+        .body(articleRequest)
         .postRequest(201)
     await expect(createArticleResponse).shouldMatchSchema('articles', 'POST_articles')
-    expect(createArticleResponse.article.title).shouldEqual('yayyy')
+    expect(createArticleResponse.article.title).shouldEqual(articleRequest.article.title)
     const uniqId = createArticleResponse.article.slug;
 
     const getArticle = await api
@@ -88,7 +87,7 @@ test('Create, get and delete article', async ({ api }) => {
         .param({ limit: 10, offset: 0 })
         .getRequest(200)
 
-    expect(getArticle.articles[0].title).shouldEqual('yayyy')
+    expect(getArticle.articles[0].title).shouldEqual(articleRequest.article.title)
 
     await api
         .path(`/articles/${uniqId}`)
@@ -99,35 +98,28 @@ test('Create, get and delete article', async ({ api }) => {
         .param({ limit: 10, offset: 0 })
         .getRequest(200)
 
-    expect(getArticleTwo.articles[0].title).not.shouldEqual('yayyy')
+    expect(getArticleTwo.articles[0].title).not.shouldEqual(articleRequest.article.title)
 
 
 })
 
 test('Get token by login, create, update and delete article', async ({ api }) => {
-
+    const articleRequest = getRandomArticle()
     const createArticleResponse = await api
         .path('/articles')
-        .body({
-            "article": {
-                "title": "yayyy", "description": "yayyy description 2", "body": "yayyy body 2", "tagList": ["yayyyy"]
-            }
-        })
+        .body(articleRequest)
         .postRequest(201)
-
-    expect(createArticleResponse.article.title).shouldEqual('yayyy')
+    expect(createArticleResponse.article.title).shouldEqual(articleRequest.article.title)
     const uniqId = createArticleResponse.article.slug;
+
+    articleRequest.article.title = `${articleRequest.article.title} updated`;
 
     const updateArticleResponse = await api
         .path(`/articles/${uniqId}`)
-        .body({
-            "article": {
-                "title": "Praba yayyyy", "description": "Praba yayyyy description", "body": "Praba yayyyy body", "tagList": ["Praba yayyyy"]
-            }
-        })
+        .body(articleRequest)
         .putRequest(200)
 
-    expect(updateArticleResponse.article.title).shouldEqual('Praba yayyyy')
+    expect(updateArticleResponse.article.title).shouldEqual(articleRequest.article.title)
     const uniqId2 = updateArticleResponse.article.slug;
 
     const getArticle = await api
@@ -135,8 +127,7 @@ test('Get token by login, create, update and delete article', async ({ api }) =>
         .param({ limit: 10, offset: 0 })
         .getRequest(200)
 
-    expect(getArticle.articles[0].title).shouldEqual('Praba yayyyy')
-
+    expect(getArticle.articles[0].title).shouldEqual(articleRequest.article.title)
 
     await api
         .path(`/articles/${uniqId2}`)
@@ -147,5 +138,5 @@ test('Get token by login, create, update and delete article', async ({ api }) =>
         .param({ limit: 10, offset: 0 })
         .getRequest(200)
 
-    expect(getArticleTwo.articles[0].title).not.shouldEqual('Praba yayyyy')
+    expect(getArticleTwo.articles[0].title).not.shouldEqual(articleRequest.article.title)
 })

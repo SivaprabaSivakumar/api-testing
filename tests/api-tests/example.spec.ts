@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { wait } from 'wait-utils';
 import { faker } from '@faker-js/faker';
-import { Article } from '../interface/articleInterface';
+import { Article } from '../../interface/articleInterface';
 
 let authToken: string;
 

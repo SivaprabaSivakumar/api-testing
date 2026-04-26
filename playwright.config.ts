@@ -18,7 +18,9 @@ export default defineConfig({
   workers: 1,
   // workers: process.env.CI ? 1 : 1,
   reporter: [['html'], ['list']],
-  use: {},
+  use: {
+    trace: 'retain-on-failure',
+  },
   // use: {
   //   extraHTTPHeaders: {
   //   },
@@ -33,19 +35,19 @@ export default defineConfig({
     {
       name: 'api-testing',
       testMatch: 'example*',
-      dependencies: ['smoke-test'], // run smoke-tests before api-testing
+      dependencies: ['smoke-test'] // run smoke-tests before api-testing
+    },
+    {
+      name: 'api-smoke-test',
+      testDir: './tests/api-tests',
+      testMatch: 'example*'
+    },
+    {
+      name: 'ui-tests',
+      testDir: './tests/ui-tests',
       use: {
-        extraHTTPHeaders: {
-
-        }
+        defaultBrowserType: 'chromium',
       }
-    },
-    {
-      name: 'smoke-test',
-      testMatch: 'smoke*'
-    },
-    {
-      name: 'all-test',
     }
   ]
 });

@@ -11,10 +11,12 @@
   "devDependencies": {
     "@faker-js/faker": "^10.4.0",
     "@playwright/test": "^1.58.2",
-    "@types/node": "^25.3.5",
+    "@types/node": "^25.6.0",
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
-    "genson-js": "^0.0.8"
+    "dotenv": "^17.4.2",
+    "genson-js": "^0.0.8",
+    "typescript": "^6.0.3"
   },
   "dependencies": {
     "wait-utils": "^2.1.2"

@@ -1,5 +1,10 @@
+import dotenv from 'dotenv';
+import path from 'path';
+dotenv.config({ path: path.resolve(__dirname, '.env') });
+
+
 const processENV = process.env.ENV
-const env = processENV || 'qa'
+const env = processENV || 'qa' //for prod change to prod
 console.log('Test env is : ', env)
 
 const config = {
@@ -14,8 +19,11 @@ if (env === 'qa') {
 }
 
 if (env === 'prod') {
-    config.userEmail = 'pwapiuser@test.com';
-    config.userPassword = 'Welcome';
+    // if (!process.env.PROD_USERNAME || !process.env.PROD_PASSWORD) {
+    //     throw new Error('PROD_USERNAME or PROD_PASSWORD is not defined');
+    // }
+    config.userEmail = process.env.PROD_USERNAME as string
+    config.userPassword = process.env.PROD_PASSWORD || '';
 }
 
 export { config }
